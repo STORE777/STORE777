@@ -2,129 +2,136 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Store777 - Loja Virtual</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store777 Premium - Produtos Digitais com Estilo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg: #0f0f0f;
-      --text: #ffffff;
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #1a1a1a;
       --accent: #e50914;
-      --card-bg: #1a1a1a;
-      --border: #333;
+      --text-light: #ffffff;
+      --text-muted: #b3b3b3;
+      --card-shadow: 0 4px 20px rgba(229, 9, 20, 0.2);
+      --transition: all 0.3s ease;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      line-height: 1.6;
-      padding: 20px;
+    body { 
+      background: var(--bg-primary); 
+      color: var(--text-light); 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      line-height: 1.6; 
     }
     header {
-      text-align: center;
-      padding: 40px 20px;
-      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+      padding: 20px 0;
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
-    h1 {
-      font-size: 3rem;
-      color: var(--accent);
-      margin-bottom: 10px;
+    .header-container {
+      max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
     }
-    .admin-login {
-      margin-top: 20px;
+    .logo {
+      font-size: 2rem; font-weight: bold; color: var(--accent); text-decoration: none;
     }
-    .btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: 0.3s;
+    .logo i { margin-right: 10px; }
+    .nav-categories {
+      display: flex; gap: 20px;
     }
-    .btn:hover { opacity: 0.9; }
+    .nav-categories a {
+      color: var(--text-light); text-decoration: none; padding: 10px 15px; border-radius: 5px; transition: var(--transition);
+    }
+    .nav-categories a:hover, .nav-categories a.active {
+      background: var(--accent); color: #fff;
+    }
+    .admin-btn {
+      background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: var(--transition);
+    }
+    .admin-btn:hover { opacity: 0.9; }
+    main {
+      max-width: 1200px; margin: 40px auto; padding: 0 20px;
+    }
+    .hero {
+      text-align: center; margin-bottom: 40px;
+    }
+    .hero h1 { font-size: 3.5rem; margin-bottom: 10px; color: var(--accent); }
+    .hero p { font-size: 1.2rem; color: var(--text-muted); }
     #products {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      margin-top: 40px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px;
     }
     .product-card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: transform 0.3s;
+      background: var(--bg-secondary); border-radius: 12px; overflow: hidden; transition: var(--transition); box-shadow: var(--card-shadow);
     }
-    .product-card:hover { transform: translateY(-5px); }
+    .product-card:hover { transform: translateY(-10px); box-shadow: 0 8px 30px rgba(229, 9, 20, 0.3); }
     .product-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
+      width: 100%; height: 250px; object-fit: cover;
     }
     .product-info {
-      padding: 15px;
+      padding: 20px;
     }
-    .product-title {
-      font-size: 1.2rem;
-      margin-bottom: 8px;
-    }
-    .product-price {
-      color: var(--accent);
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
+    .product-category { font-size: 0.8rem; color: var(--accent); margin-bottom: 10px; }
+    .product-title { font-size: 1.5rem; margin-bottom: 10px; }
+    .product-price { font-size: 1.3rem; color: var(--accent); font-weight: bold; margin-bottom: 15px; }
     .buy-btn {
-      width: 100%;
-      margin-top: 10px;
-      background: #28a745;
+      width: 100%; background: var(--accent); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; transition: var(--transition);
     }
+    .buy-btn:hover { background: #c40811; }
     .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;
     }
     .modal-content {
-      background: var(--card-bg);
-      padding: 30px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 500px;
+      background: var(--bg-secondary); padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;
     }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      background: #333;
-      border: 1px solid var(--border);
-      color: white;
-      border-radius: 4px;
+    .close { float: right; font-size: 2rem; cursor: pointer; color: var(--text-muted); }
+    input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; background: #333; border: 1px solid #444; color: var(--text-light); border-radius: 5px; }
+    footer {
+      background: var(--bg-primary); text-align: center; padding: 20px; margin-top: 60px; color: var(--text-muted);
     }
-    .close { float: right; cursor: pointer; font-size: 1.5rem; }
+    .whatsapp-btn {
+      position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: var(--transition);
+    }
+    .whatsapp-btn:hover { transform: scale(1.1); }
+    @media (max-width: 768px) {
+      .nav-categories { flex-wrap: wrap; gap: 10px; }
+      .hero h1 { font-size: 2.5rem; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Store777</h1>
-    <p>Sua loja virtual estilo Netflix</p>
-    <div class="admin-login">
-      <button class="btn" onclick="openAdmin()">Login Admin</button>
+    <div class="header-container">
+      <a href="#" class="logo"><i class="fas fa-shopping-bag"></i> Store777 Premium</a>
+      <nav class="nav-categories">
+        <a href="#" class="category-link active" data-category="all">Todos</a>
+        <a href="#" class="category-link" data-category="ebooks">eBooks</a>
+        <a href="#" class="category-link" data-category="cursos">Cursos</a>
+        <a href="#" class="category-link" data-category="apps">Apps</a>
+        <a href="#" class="category-link" data-category="licencas">Licenças</a>
+      </nav>
+      <button class="admin-btn" onclick="openAdminModal()">Admin</button>
     </div>
   </header>
 
-  <section id="products"></section>
+  <main>
+    <section class="hero">
+      <h1>Seus produtos digitais, com estilo e segurança</h1>
+      <p>Descubra eBooks, cursos e mais. Pague com Cacto e receba instantaneamente.</p>
+    </section>
+
+    <section id="products"></section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Store777 Premium. Todos os direitos reservados. | Suporte: admin@store777.com</p>
+  </footer>
 
   <!-- Modal Admin -->
   <div id="adminModal" class="modal">
     <div class="modal-content">
-      <span class="close" onclick="closeAdmin()">&times;</span>
-      <h2>Admin Login</h2>
-      <input type="email" id="adminEmail" placeholder="Email" />
-      <input type="password" id="adminPass" placeholder="Senha" />
+      <span class="close" onclick="closeAdminModal()">&times;</span>
+      <h2>Login Admin</h2>
+      <input type="email" id="adminEmail" placeholder="Email">
+      <input type="password" id="adminPass" placeholder="Senha">
       <button class="btn" onclick="loginAdmin()">Entrar</button>
     </div>
   </div>
@@ -134,92 +141,120 @@
     <div class="modal-content">
       <span class="close" onclick="closeProductModal()">&times;</span>
       <h2>Cadastrar Produto</h2>
-      <input type="text" id="imgUrl" placeholder="URL da Imagem" />
-      <input type="text" id="title" placeholder="Título" />
-      <textarea id="desc" placeholder="Descrição"></textarea>
-      <input type="text" id="price" placeholder="Preço (R$)" />
-      <input type="text" id="cactoLink" placeholder="Link da Cacto" />
-      <button class="btn" onclick="saveProduct()">Cadastrar na Loja</button>
+      <input type="text" id="title" placeholder="Título do Produto">
+      <textarea id="description" placeholder="Descrição detalhada"></textarea>
+      <input type="number" id="price" placeholder="Preço (R$)" step="0.01">
+      <input type="url" id="imageUrl" placeholder="URL da Imagem">
+      <input type="url" id="checkoutLink" placeholder="Link Checkout Cacto">
+      <select id="category">
+        <option value="all">Categoria Geral</option>
+        <option value="ebooks">eBooks</option>
+        <option value="cursos">Cursos</option>
+        <option value="apps">Apps</option>
+        <option value="licencas">Licenças</option>
+      </select>
+      <button class="btn" onclick="addProduct()">Adicionar Produto</button>
     </div>
   </div>
 
-  <script>
-    // === AQUI ESTÁ A SENHA (LINHA 120+) ===
-    const ADMIN_EMAIL = 'admin@store777.com';
-    const ADMIN_PASSWORD = '@Nego159'; // <--- MUDE AQUI AGORA!
-    let isAdmin = false;
+  <!-- Botão WhatsApp -->
+  <a href="https://wa.me/5511999999999?text=Oi, interesse em um produto da Store777!" class="whatsapp-btn" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
 
-    // Carregar produtos
-    function loadProducts() {
-      const products = JSON.parse(localStorage.getItem('store777_products') || '[]');
+  <script>
+    // SENHA ATUALIZADA PARA @Nego159
+    const ADMIN_EMAIL = 'admin@store777.com';
+    const ADMIN_PASSWORD = '@Nego159'; // ← SUA NOVA SENHA FORTE
+    let isLoggedIn = false;
+    let products = JSON.parse(localStorage.getItem('store777Products') || '[]');
+
+    function loadProducts(filter = 'all') {
       const container = document.getElementById('products');
       container.innerHTML = '';
-      products.forEach(p => {
+      const filteredProducts = filter === 'all' ? products : products.filter(p => p.category === filter);
+      if (filteredProducts.length === 0) {
+        container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">Nenhum produto nesta categoria.</p>';
+        return;
+      }
+      filteredProducts.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
-          <img src="${p.img}" class="product-img" alt="${p.title}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagem'">
+          <img src="${product.imageUrl}" alt="${product.title}" class="product-img" onerror="this.src='https://via.placeholder.com/300x250?text=Imagem+Não+Carregada'">
           <div class="product-info">
-            <div class="product-title">${p.title}</div>
-            <div>${p.desc}</div>
-            <div class="product-price">R$ ${p.price}</div>
-            <button class="btn buy-btn" onclick="window.open('${p.link}', '_blank')">Comprar na Cacto</button>
+            <span class="product-category">${product.category.toUpperCase()}</span>
+            <h3 class="product-title">${product.title}</h3>
+            <p>${product.description.substring(0, 100)}...</p>
+            <div class="product-price">R$ ${product.price}</div>
+            <button class="buy-btn" onclick="buyProduct('${product.checkoutLink}')">Comprar Agora</button>
           </div>
         `;
         container.appendChild(card);
       });
-      if (isAdmin && products.length === 0) {
-        container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Nenhum produto cadastrado. <button class="btn" onclick="openProductModal()">Cadastrar agora</button></p>';
-      }
     }
 
-    // Admin
-    function openAdmin() {
-      document.getElementById('adminModal').style.display = 'flex';
+    function openAdminModal() {
+      if (isLoggedIn) {
+        document.getElementById('productModal').style.display = 'flex';
+      } else {
+        document.getElementById('adminModal').style.display = 'flex';
+      }
     }
-    function closeAdmin() {
-      document.getElementById('adminModal').style.display = 'none';
-    }
+    function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
+    function closeProductModal() { document.getElementById('productModal').style.display = 'none'; }
+
     function loginAdmin() {
       const email = document.getElementById('adminEmail').value;
       const pass = document.getElementById('adminPass').value;
       if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
-        isAdmin = true;
-        closeAdmin();
-        alert('Login admin realizado!');
-        document.querySelector('.admin-login').innerHTML = '<button class="btn" onclick="openProductModal()">Cadastrar Produto</button>';
-        loadProducts();
+        isLoggedIn = true;
+        closeAdminModal();
+        alert('Login realizado com sucesso!');
+        document.querySelector('.admin-btn').innerHTML = 'Admin <i class="fas fa-user"></i>';
+        document.querySelector('.admin-btn').onclick = () => document.getElementById('productModal').style.display = 'flex';
       } else {
-        alert('Credenciais inválidas!');
+        alert('Email ou senha incorretos!');
       }
     }
 
-    // Produto
-    function openProductModal() {
-      if (!isAdmin) return alert('Faça login admin primeiro!');
-      document.getElementById('productModal').style.display = 'flex';
-    }
-    function closeProductModal() {
-      document.getElementById('productModal').style.display = 'none';
-    }
-    function saveProduct() {
-      const product = {
-        img: document.getElementById('imgUrl').value,
-        title: document.getElementById('title').value,
-        desc: document.getElementById('desc').value,
-        price: document.getElementById('price').value,
-        link: document.getElementById('cactoLink').value
-      };
-      const products = JSON.parse(localStorage.getItem('store777_products') || '[]');
-      products.push(product);
-      localStorage.setItem('store777_products', JSON.stringify(products));
+    function addProduct() {
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const price = document.getElementById('price').value;
+      const imageUrl = document.getElementById('imageUrl').value;
+      const checkoutLink = document.getElementById('checkoutLink').value;
+      const category = document.getElementById('category').value;
+
+      if (!title || !description || !price || !checkoutLink || !imageUrl) {
+        alert('Preencha todos os campos!');
+        return;
+      }
+
+      const newProduct = { title, description, price, imageUrl, checkoutLink, category };
+      products.push(newProduct);
+      localStorage.setItem('store777Products', JSON.stringify(products));
       closeProductModal();
       loadProducts();
-      alert('Produto cadastrado!');
+      alert('Produto adicionado com sucesso!');
+      document.getElementById('productModal').querySelectorAll('input, textarea, select').forEach(el => el.value = '');
     }
 
-    // Init
-    loadProducts();
+    function buyProduct(link) {
+      if (link) window.open(link, '_blank');
+      else alert('Link de pagamento não configurado.');
+    }
+
+    document.querySelectorAll('.category-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.category-link').forEach(l => l.classList.remove('active'));
+        e.target.classList.add('active');
+        loadProducts(e.target.dataset.category);
+      });
+    });
+
+    window.addEventListener('load', () => loadProducts());
   </script>
 </body>
 </html>
