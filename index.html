@@ -138,4 +138,88 @@
       <input type="text" id="title" placeholder="Título" />
       <textarea id="desc" placeholder="Descrição"></textarea>
       <input type="text" id="price" placeholder="Preço (R$)" />
-      <input type="text" id="cactoLink
+      <input type="text" id="cactoLink" placeholder="Link da Cacto" />
+      <button class="btn" onclick="saveProduct()">Cadastrar na Loja</button>
+    </div>
+  </div>
+
+  <script>
+    // === AQUI ESTÁ A SENHA (LINHA 120+) ===
+    const ADMIN_EMAIL = 'admin@store777.com';
+    const ADMIN_PASSWORD = '@Nego159'; // <--- MUDE AQUI AGORA!
+    let isAdmin = false;
+
+    // Carregar produtos
+    function loadProducts() {
+      const products = JSON.parse(localStorage.getItem('store777_products') || '[]');
+      const container = document.getElementById('products');
+      container.innerHTML = '';
+      products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <img src="${p.img}" class="product-img" alt="${p.title}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagem'">
+          <div class="product-info">
+            <div class="product-title">${p.title}</div>
+            <div>${p.desc}</div>
+            <div class="product-price">R$ ${p.price}</div>
+            <button class="btn buy-btn" onclick="window.open('${p.link}', '_blank')">Comprar na Cacto</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      if (isAdmin && products.length === 0) {
+        container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Nenhum produto cadastrado. <button class="btn" onclick="openProductModal()">Cadastrar agora</button></p>';
+      }
+    }
+
+    // Admin
+    function openAdmin() {
+      document.getElementById('adminModal').style.display = 'flex';
+    }
+    function closeAdmin() {
+      document.getElementById('adminModal').style.display = 'none';
+    }
+    function loginAdmin() {
+      const email = document.getElementById('adminEmail').value;
+      const pass = document.getElementById('adminPass').value;
+      if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
+        isAdmin = true;
+        closeAdmin();
+        alert('Login admin realizado!');
+        document.querySelector('.admin-login').innerHTML = '<button class="btn" onclick="openProductModal()">Cadastrar Produto</button>';
+        loadProducts();
+      } else {
+        alert('Credenciais inválidas!');
+      }
+    }
+
+    // Produto
+    function openProductModal() {
+      if (!isAdmin) return alert('Faça login admin primeiro!');
+      document.getElementById('productModal').style.display = 'flex';
+    }
+    function closeProductModal() {
+      document.getElementById('productModal').style.display = 'none';
+    }
+    function saveProduct() {
+      const product = {
+        img: document.getElementById('imgUrl').value,
+        title: document.getElementById('title').value,
+        desc: document.getElementById('desc').value,
+        price: document.getElementById('price').value,
+        link: document.getElementById('cactoLink').value
+      };
+      const products = JSON.parse(localStorage.getItem('store777_products') || '[]');
+      products.push(product);
+      localStorage.setItem('store777_products', JSON.stringify(products));
+      closeProductModal();
+      loadProducts();
+      alert('Produto cadastrado!');
+    }
+
+    // Init
+    loadProducts();
+  </script>
+</body>
+</html>
