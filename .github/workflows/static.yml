@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Store777 - Loja Virtual</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --text: #ffffff;
+      --accent: #e50914;
+      --card-bg: #1a1a1a;
+      --border: #333;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 {
+      font-size: 3rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .admin-login {
+      margin-top: 20px;
+    }
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover { opacity: 0.9; }
+    #products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .product-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    .product-card:hover { transform: translateY(-5px); }
+    .product-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 15px;
+    }
+    .product-title {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+    .product-price {
+      color: var(--accent);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    .buy-btn {
+      width: 100%;
+      margin-top: 10px;
+      background: #28a745;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: #333;
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 4px;
+    }
+    .close { float: right; cursor: pointer; font-size: 1.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Store777</h1>
+    <p>Sua loja virtual estilo Netflix</p>
+    <div class="admin-login">
+      <button class="btn" onclick="openAdmin()">Login Admin</button>
+    </div>
+  </header>
+
+  <section id="products"></section>
+
+  <!-- Modal Admin -->
+  <div id="adminModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAdmin()">&times;</span>
+      <h2>Admin Login</h2>
+      <input type="email" id="adminEmail" placeholder="Email" />
+      <input type="password" id="adminPass" placeholder="Senha" />
+      <button class="btn" onclick="loginAdmin()">Entrar</button>
+    </div>
+  </div>
+
+  <!-- Modal Cadastro Produto -->
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeProductModal()">&times;</span>
+      <h2>Cadastrar Produto</h2>
+      <input type="text" id="imgUrl" placeholder="URL da Imagem" />
+      <input type="text" id="title" placeholder="Título" />
+      <textarea id="desc" placeholder="Descrição"></textarea>
+      <input type="text" id="price" placeholder="Preço (R$)" />
+      <input type="text" id="cactoLink" placeholder="Link da Cacto" />
+      <button class="btn" onclick="saveProduct()">Cadastrar na Loja</button>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_EMAIL = 'admin@store777.com';
+    const ADMIN_PASSWORD = '@Nego159'; // MUDE PARA SUA SENHA FORTE!
+    let isAdmin = false;
+
+    function loadProducts() {
+      const products = JSON.parse(localStorage.getItem('store777_products') || '[]');
+      const container = document.getElementById('products');
+      container.innerHTML = '';
+      products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <img src="${p.img}" class="product-img" alt="${p.title}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagem'">
+          <div class="product-info">
+            <div class="product-title">${p.title}</div>
+            <div>${p.desc}</div>
+            <div class="product-price">R$ ${p.price}</div>
+            <button class="btn buy-btn" onclick="window.open('${p.link}', '_blank')">Comprar na Cacto</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      if (isAdmin && products.length === 0) {
+        container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Nenhum produto cadastrado. <button class="btn" onclick="openProductModal()">Cadastrar agora</button></p>';
+      }
+    }
+
+    function openAdmin() {
+      document.getElementById('adminModal').style.display = 'flex';
+    }
+    function closeAdmin() {
+      document.getElementById('adminModal').style.display = 'none';
+    }
+    function loginAdmin() {
+      const email = document.getElementById('adminEmail').value;
+      const pass = document.getElementById('adminPass').value;
+      if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
+        isAdmin = true;
+        closeAdmin();
+        alert('Login admin realizado!');
+        document.querySelector('.admin-login').innerHTML = '<button class="btn" onclick="openProductModal()">Cadastrar Produto</button>';
+        loadProducts();
+      } else {
+        alert('Credenciais inválidas!');
+      }
+    }
+
+    function openProductModal() {
+      if (!isAdmin) return alert('Faça login admin primeiro!');
+      document.getElementById('productModal').style.display = 'flex';
+    }
+    function closeProductModal() {
+      document.getElementById('productModal').style.display = 'none';
+    }
+    function saveProduct() {
+      const product = {
+        img: document.getElementById('imgUrl').value,
+        title: document.getElementById('title').value,
+        desc: document.getElementById('desc').value,
+        price: document.getElementById('price').value,
+        link: document.getElementById('cactoLink').value
+      };
+      const products = JSON.parse(localStorage.getItem('store777_products') || '[]');
+      products.push(product);
+      localStorage.setItem('store777_products', JSON.stringify(products));
+      closeProductModal();
+      loadProducts();
+      alert('Produto cadastrado!');
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
